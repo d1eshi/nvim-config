@@ -14,6 +14,7 @@ return {
     },
 
     config = function()
+
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
         local capabilities = vim.tbl_deep_extend(
@@ -27,8 +28,9 @@ return {
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "lua_ls",
-		"fdaskfjsa"
-		"eslint"
+                "eslint",
+                "tailwindcss",
+                "html"
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -90,18 +92,6 @@ return {
             }, {
                 { name = 'buffer' },
             })
-        })
-
-        vim.diagnostic.config({
-            -- update_in_insert = true,
-            float = {
-                focusable = false,
-                style = "minimal",
-                border = "rounded",
-                source = "always",
-                header = "",
-                prefix = "",
-            },
         })
     end
 }
