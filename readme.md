@@ -1,3 +1,3 @@
-basic configuration for nvim setup
+### basic configuration for nvim setup
 
 idk
