@@ -5,59 +5,79 @@ local g = vim.g
 -------------------------------------- globals -----------------------------------------
 g.toggle_theme_icon = "   "
 
--------------------------------------- options ------------------------------------------
-o.laststatus = 3
-o.showmode = false
+vim.wo.number = true
+vim.wo.relativenumber = true
 
-o.clipboard = "unnamedplus"
-o.cursorline = true
-o.cursorlineopt = "number"
+----- desactiva el wrap de líneas
+vim.wo.wrap = false
+---
+----- muestra un indicador para líneas que continúan fuera de la pantalla
+vim.wo.listchars = 'extends:→,precedes:←'
 
--- Indenting
-o.expandtab = true
-o.shiftwidth = 2
-o.smartindent = true
-o.tabstop = 2
-o.softtabstop = 2
+-- opcional: habilita el desplazamiento horizontal suave
+vim.o.sidescroll = 1
+vim.o.sidescrolloff = 8
 
-opt.fillchars = { eob = " " }
-o.ignorecase = true
-o.smartcase = true
-o.mouse = "a"
+-- theme
 
--- Numbers
-o.number = true
-o.numberwidth = 2
-o.ruler = false
+vim.cmd [[colorscheme tokyonight]]
+--
 
--- disable nvim intro
-opt.shortmess:append "sI"
+vim.cmd [[augroup AutoFormat]]
+vim.cmd [[autocmd!]]
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
+vim.cmd [[augroup END]]
 
-o.signcolumn = "yes"
-o.splitbelow = true
-o.splitright = true
-o.timeoutlen = 400
-o.undofile = true
 
--- interval for writing swap file to disk, also used by gitsigns
-o.updatetime = 250
-
--- go to previous/next line with h,l,left arrow and right arrow
--- when cursor reaches end/beginning of line
-opt.whichwrap:append "<>[]hl"
-
--- g.mapleader = " "
-
--- disable some default providers
-g.loaded_node_provider = 0
-g.loaded_python3_provider = 0
-g.loaded_perl_provider = 0
-g.loaded_ruby_provider = 0
-
-vim.cmd[[colorscheme tokyonight]]
 
 -- add binaries installed by mason.nvim to path
 local is_windows = vim.fn.has "win32" ~= 0
 local sep = is_windows and "\\" or "/"
 local delim = is_windows and ";" or ":"
 vim.env.PATH = table.concat({ vim.fn.stdpath "data", "mason", "bin" }, sep) .. delim .. vim.env.PATH
+
+
+
+
+-- ñade esto a tu archivo de configuración de Neovim (e.g., init.lua)
+
+-- Detecta si estamos en WSL
+local in_wsl = vim.fn.has('wsl') == 1
+
+-- Configura el portapapeles
+if in_wsl then
+	vim.g.clipboard = {
+		name = 'WslClipboard',
+		copy = {
+			['+'] = 'clip.exe',
+			['*'] = 'clip.exe',
+		},
+		paste = {
+			['+'] =
+			'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+			['*'] =
+			'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+		},
+		cache_enabled = 0,
+	}
+else
+	vim.opt.clipboard:append("unnamedplus")
+	-- Configura Neovim para usar el registro del sistema por defecto
+	vim.opt.clipboard:append("unnamedplus")
+	-- Función para sincronizar el yanking con el portapapeles del sistema
+	local function sync_clipboard(event)
+		if event.operator == 'y' and event.regname == '' then
+			vim.fn.setreg('+', vim.fn.getreg('"'))
+		end
+	end
+
+	-- Configura un autocomando para sincronizar después de cada operación de yanking
+	vim.api.nvim_create_autocmd("TextYankPost", {
+		callback = sync_clipboard
+	})
+
+	-- Mapeos opcionales para copiar/pegar explícitamente al portapapeles del sistema
+	vim.api.nvim_set_keymap('n', '<leader>y', '"+y', { noremap = true, silent = true })
+	vim.api.nvim_set_keymap('v', '<leader>y', '"+y', { noremap = true, silent = true })
+	vim.api.nvim_set_keymap('n', '<leader>p', '"+p', { noremap = true, silent = true })
+end
