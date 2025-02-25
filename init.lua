@@ -1,1 +1,1 @@
-require('d1eshi')
+require('d1eshi.core')
