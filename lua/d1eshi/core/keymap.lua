@@ -23,7 +23,5 @@ keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", {desc = "Go to previous tab"})
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", {desc = "Open current buffer in new tab"})
 
 
---    keymap.set("n", "<leader>pv", "<cmd>NvimTreeToggle<CR>", { desc= 'Toggle file explorer' })
---    keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) 
-
-vim.keymap.set("n", "<leader>xe", "<cmd>NvimTreeToggle<CR>", { noremap = true, silent = true })
+-- nvim-tree
+--keymap.set("n", "<leader>pv", "<cmd>NvimTreeToggle<CR>", { noremap = true, silent = true })
