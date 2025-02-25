@@ -51,26 +51,8 @@ return {
       },
     })
     
--- 📌 Función para abrir nvim-tree en pantalla completa
-    local function toggle_nvim_tree_fullscreen()
-      local view = require("nvim-tree.view")
-
-      if view.is_visible() then
-        -- Si `nvim-tree` está abierto, lo cerramos y cerramos el tab si fue creado para esto
-        require("nvim-tree").toggle()
-        vim.cmd("tabclose")  
-      else
-        -- Guardamos el buffer actual para volver después
-        vim.g.last_buffer = vim.api.nvim_get_current_buf()
-
-        -- Abrimos un nuevo tab y activamos `nvim-tree`
-        vim.cmd("tabnew")
-        require("nvim-tree").toggle(true, true)
-      end
-    end
-
-
-vim.keymap.set("n", "pv", ":lua toggle_nvim_tree_fullscreen()<CR>", { noremap = true, silent = true })
+    local keymap = vim.keymap
+    keymap.set("n", "<leader>pv", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"} )
 
   end
 }
