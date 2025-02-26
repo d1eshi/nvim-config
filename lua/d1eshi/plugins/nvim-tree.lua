@@ -16,6 +16,7 @@ return {
         --adaptive_size = true, -- Ajusta automáticamente el tamaño
       },
       -- change folder arrow icons
+
       renderer = {
         indent_markers = {
           enable = true,
