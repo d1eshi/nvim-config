@@ -14,7 +14,7 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("d1eshi.plugins", {
+require("lazy").setup({ { import = "d1eshi.plugins" }, {  import = "d1eshi.plugins.lsp"} }, {
   change_detection = {
    notify = false
   }
