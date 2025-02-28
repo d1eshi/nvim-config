@@ -14,4 +14,8 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("d1eshi.plugins")
+require("lazy").setup("d1eshi.plugins", {
+  change_detection = {
+   notify = false
+  }
+})
