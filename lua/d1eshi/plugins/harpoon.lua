@@ -6,12 +6,13 @@ return {
 		local harpoon = require("harpoon")
 		local keymap = vim.keymap
 
-		harpoon:setup()
+		harpoon:setup({
+			settings = {
+				save_on_toggle = true,
+				sync_on_ui_close = true,
+			},
+		})
 
-		-- Agregar y modificar lista de archivos en Harpoon
-		-- keymap.set("n", "<leader>A", function()
-		-- 	harpoon:list():prepend()
-		-- end)
 		keymap.set("n", "<leader>a", function()
 			harpoon:list():add()
 		end)
@@ -19,14 +20,6 @@ return {
 		keymap.set("n", "<C-e>", function()
 			harpoon.ui:toggle_quick_menu(harpoon:list())
 		end)
-		--    keymap.set("n", "<leader>a", function() harpoon:list():add_file() end)
-
-		-- Abrir el menú de Harpoon
-		-- keymap.set("n", "<C-e>", function()
-		-- 	harpoon:ui:toggle_quick_menu(harpoon:list())
-		-- end)
-
-		-- Navegar entre los archivos guardados en Harpoon
 		keymap.set("n", "<C-h>", function()
 			harpoon:list():select(1)
 		end)

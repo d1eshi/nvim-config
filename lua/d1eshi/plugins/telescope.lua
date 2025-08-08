@@ -8,6 +8,7 @@ return {
 		"nvim-lua/plenary.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		"nvim-tree/nvim-web-devicons",
+		"ahmedkhalf/project.nvim",
 	},
 
 	config = function()
@@ -20,14 +21,28 @@ return {
 				mappings = {
 					i = {
 						["<C-k>"] = actions.move_selection_previous,
+						["<C-n>"] = nil,
 						["<C-j>"] = actions.move_selection_next,
 						["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
 					},
 				},
 			},
+			extensions = {
+				projects = {
+					hidden_files = true,
+					theme = "dropdown",
+				},
+			},
 		})
 
 		telescope.load_extension("fzf")
+
+		require("project_nvim").setup({
+			detection_methods = { "lsp", "pattern" },
+			patterns = { ".git", "package.json", "tsconfig.json", "Makefile" },
+		})
+
+		require("telescope").load_extension("projects")
 
 		local builtin = require("telescope.builtin")
 
@@ -46,5 +61,6 @@ return {
 		end)
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 		vim.keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor cwd" })
+		vim.keymap.set("n", "<leader>fp", "<cmd>Telescope projects<cr>", { desc = "Buscar proyecto reciente" })
 	end,
 }

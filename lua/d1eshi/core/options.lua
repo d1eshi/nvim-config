@@ -20,8 +20,8 @@ opt.cursorline = true
 
 --- theme configs
 opt.termguicolors = true
-opt.background = 'dark'
-opt.signcolumn = 'yes'
+opt.background = "dark"
+opt.signcolumn = "yes"
 
 -- backspace
 opt.backspace = "indent,eol,start"
@@ -32,5 +32,3 @@ opt.clipboard:append("unnamedplus")
 -- split windows
 opt.splitright = true
 opt.splitbelow = true
-
-
