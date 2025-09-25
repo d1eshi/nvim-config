@@ -13,6 +13,10 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+if not vim.g.vscode then
+	vim.o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+end
+
 require("lazy").setup({ { import = "d1eshi.plugins" }, { import = "d1eshi.plugins.lsp" } }, {
 	change_detection = {
 		notify = false,

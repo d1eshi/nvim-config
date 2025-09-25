@@ -87,58 +87,52 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		-- AQUÍ ESTÁ EL CAMBIO IMPORTANTE: Configurar mason-lspconfig primero
-		mason_lspconfig.setup({
-			ensure_installed = {
-				"lua_ls",
-				"pyright",
-				"emmet_ls",
-				-- Agrega otros servidores que uses
-			},
-		})
-
-		-- LUEGO configurar los handlers
-		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			["emmet_ls"] = function()
-				-- configure emmet language server
-				lspconfig["emmet_ls"].setup({
-					capabilities = capabilities,
-					filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
-				})
-			end,
-			["lua_ls"] = function()
-				-- configure lua server (with special settings)
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							-- make the language server recognize "vim" global
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
+		-- Configurar los handlers (Mason ya se configura en `mason.lua`)
+		if mason_lspconfig.setup_handlers then
+			mason_lspconfig.setup_handlers({
+				-- default handler for installed servers
+				function(server_name)
+					lspconfig[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
+				["emmet_ls"] = function()
+					-- configure emmet language server
+					lspconfig["emmet_ls"].setup({
+						capabilities = capabilities,
+						filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+					})
+				end,
+				["lua_ls"] = function()
+					-- configure lua server (with special settings)
+					lspconfig["lua_ls"].setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								-- make the language server recognize "vim" global
+								diagnostics = {
+									globals = { "vim" },
+								},
+								completion = {
+									callSnippet = "Replace",
+								},
 							},
 						},
-					},
-				})
-			end,
-			["pyright"] = function()
-				lspconfig["pyright"].setup({
-					capabilities = capabilities,
-				})
-			end,
-		})
+					})
+				end,
+				["pyright"] = function()
+					lspconfig["pyright"].setup({
+						capabilities = capabilities,
+					})
+				end,
+			})
+		else
+			-- Fallback para versiones antiguas de mason-lspconfig: configurar manualmente algunos servidores
+			for _, server_name in ipairs({ "lua_ls", "pyright", "emmet_ls" }) do
+				lspconfig[server_name].setup({ capabilities = capabilities })
+			end
+		end
 
 		-- Configurar ruff_lsp por separado si lo necesitas
-		lspconfig.ruff_lsp.setup({
-			capabilities = capabilities,
-		})
 	end,
 }
