@@ -88,50 +88,58 @@ return {
 		end
 
 		-- Configurar los handlers (Mason ya se configura en `mason.lua`)
-		if mason_lspconfig.setup_handlers then
-			mason_lspconfig.setup_handlers({
-				-- default handler for installed servers
+		mason_lspconfig.setup({
+			handlers = {
 				function(server_name)
-					lspconfig[server_name].setup({
+					vim.lsp.config(server_name, {
 						capabilities = capabilities,
 					})
 				end,
-				["emmet_ls"] = function()
-					-- configure emmet language server
-					lspconfig["emmet_ls"].setup({
-						capabilities = capabilities,
-						filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
-					})
-				end,
+
 				["lua_ls"] = function()
-					-- configure lua server (with special settings)
-					lspconfig["lua_ls"].setup({
+					vim.lsp.config("lua_ls", {
 						capabilities = capabilities,
 						settings = {
 							Lua = {
-								-- make the language server recognize "vim" global
-								diagnostics = {
-									globals = { "vim" },
-								},
-								completion = {
-									callSnippet = "Replace",
+								diagnostics = { globals = { "vim" } },
+								completion = { callSnippet = "Replace" },
+							},
+						},
+					})
+				end,
+
+				["pyright"] = function()
+					vim.lsp.config("pyright", {
+						capabilities = capabilities,
+						settings = {
+							python = {
+								analysis = {
+									typeCheckingMode = "basic",
+									autoSearchPaths = true,
+									useLibraryCodeForTypes = true,
 								},
 							},
 						},
 					})
 				end,
-				["pyright"] = function()
-					lspconfig["pyright"].setup({
+
+				["emmet_ls"] = function()
+					vim.lsp.config("emmet_ls", {
 						capabilities = capabilities,
+						filetypes = {
+							"html",
+							"typescriptreact",
+							"javascriptreact",
+							"css",
+							"sass",
+							"scss",
+							"less",
+							"svelte",
+						},
 					})
 				end,
-			})
-		else
-			-- Fallback para versiones antiguas de mason-lspconfig: configurar manualmente algunos servidores
-			for _, server_name in ipairs({ "lua_ls", "pyright", "emmet_ls" }) do
-				lspconfig[server_name].setup({ capabilities = capabilities })
-			end
-		end
+			},
+		})
 
 		-- Configurar ruff_lsp por separado si lo necesitas
 	end,

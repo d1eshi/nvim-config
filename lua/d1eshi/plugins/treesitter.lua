@@ -11,9 +11,9 @@ return {
 		treesitter.setup({
 			auto_install = true,
 
-			indent = {
-				enable = true,
-			},
+			indent = { enable = true },
+
+			highlight = { enable = true },
 
 			-- A list of parser names, or "all"
 			ensure_installed = {
@@ -37,6 +37,7 @@ return {
 				"query",
 				"gitignore",
 				"dockerfile",
+				"python",
 			},
 		})
 
