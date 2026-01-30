@@ -27,6 +27,10 @@ return {
 				return venv .. "/bin/python"
 			end
 
+			if not workspace or workspace == "" then
+				workspace = vim.fn.getcwd()
+			end
+
 			local candidates = { workspace .. "/.venv", workspace .. "/venv" }
 			for _, venv_path in ipairs(candidates) do
 				if uv.fs_stat(venv_path .. "/bin/python") then
@@ -136,6 +140,8 @@ return {
 							new_config.settings = new_config.settings or {}
 							new_config.settings.python = new_config.settings.python or {}
 							new_config.settings.python.pythonPath = get_python_path(root_dir)
+							new_config.settings.python.venvPath = root_dir or vim.fn.getcwd()
+							new_config.settings.python.venv = ".venv"
 						end,
 						settings = {
 							python = {
