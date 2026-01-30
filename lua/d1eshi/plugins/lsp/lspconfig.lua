@@ -19,6 +19,23 @@ return {
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 		local keymap = vim.keymap -- for conciseness
+		local uv = vim.uv or vim.loop
+
+		local function get_python_path(workspace)
+			local venv = vim.env.VIRTUAL_ENV
+			if venv and uv.fs_stat(venv .. "/bin/python") then
+				return venv .. "/bin/python"
+			end
+
+			local candidates = { workspace .. "/.venv", workspace .. "/venv" }
+			for _, venv_path in ipairs(candidates) do
+				if uv.fs_stat(venv_path .. "/bin/python") then
+					return venv_path .. "/bin/python"
+				end
+			end
+
+			return "python3"
+		end
 
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -115,6 +132,11 @@ return {
 				["pyright"] = function()
 					vim.lsp.config("pyright", {
 						capabilities = capabilities,
+						on_new_config = function(new_config, root_dir)
+							new_config.settings = new_config.settings or {}
+							new_config.settings.python = new_config.settings.python or {}
+							new_config.settings.python.pythonPath = get_python_path(root_dir)
+						end,
 						settings = {
 							python = {
 								analysis = {
