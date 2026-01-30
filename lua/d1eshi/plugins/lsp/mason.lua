@@ -36,6 +36,7 @@ return {
 				"emmet_ls",
 				"prismals",
 				"pyright",
+				"ruff",
 			},
 			automatic_installation = true,
 		})
@@ -44,9 +45,7 @@ return {
 				"typescript-language-server",
 				"prettier", -- prettier formatter
 				"stylua", -- lua formatter
-				"isort", -- python formatter
-				"black", -- python formatter
-				"pylint", -- python linter
+				"ruff", -- python linter/formatter
 				"eslint_d", -- js linter
 			},
 		})

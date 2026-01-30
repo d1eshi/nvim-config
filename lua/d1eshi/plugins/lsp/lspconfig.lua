@@ -72,16 +72,20 @@ return {
 		vim.diagnostic.config({
 			virtual_text = false,
 			signs = true,
-			underline = false,
+			underline = true,
 			update_in_insert = false,
 			severity_sort = true,
+			float = {
+				border = "rounded",
+				source = "if_many",
+			},
 		})
 
 		-- used to enable autocompletion (assign to every lsp server config)
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
 		-- Change the Diagnostic symbols in the sign column (gutter)
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -114,12 +118,19 @@ return {
 						settings = {
 							python = {
 								analysis = {
+									autoImportCompletions = true,
 									typeCheckingMode = "basic",
 									autoSearchPaths = true,
 									useLibraryCodeForTypes = true,
 								},
 							},
 						},
+					})
+				end,
+
+				["ruff"] = function()
+					vim.lsp.config("ruff", {
+						capabilities = capabilities,
 					})
 				end,
 
